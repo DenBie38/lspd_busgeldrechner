@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LSPD Bußgeldrechner</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; }
+        select, button { padding: 10px; font-size: 16px; }
+    </style>
+</head>
+<body>
+    <h1>LSPD Bußgeldrechner</h1>
+    <label for="violation">Wählen Sie den Verstoß:</label>
+    <select id="violation">
+        <option value="Verstoß 1">Verstoß 1</option>
+        <option value="Verstoß 2">Verstoß 2</option>
+        <option value="Verstoß 3">Verstoß 3</option>
+    </select>
+    <button onclick="calculateFine()">Berechnen</button>
+
+    <h2 id="result"></h2>
+
+    <script>
+        function calculateFine() {
+            let violation = document.getElementById('violation').value;
+            let fine = '';
+
+            if (violation === 'Verstoß 1') {
+                fine = 'Strafe: 1000$';
+            } else if (violation === 'Verstoß 2') {
+                fine = 'Strafe: 2000$';
+            } else if (violation === 'Verstoß 3') {
+                fine = 'Strafe: 3000$';
+            }
+
+            document.getElementById('result').innerText = fine;
+        }
+    </script>
+</body>
+</html>
