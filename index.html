@@ -5,53 +5,144 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LSPD Bußgeldrechner</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 30px; background-color: #f4f4f9; }
-        h1 { text-align: center; color: #333; }
-        .container { max-width: 600px; margin: auto; padding: 20px; background-color: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); }
-        label { font-size: 18px; }
-        select, button { padding: 10px; font-size: 16px; width: 100%; margin-top: 10px; border: 1px solid #ccc; border-radius: 4px; }
-        button:hover { background-color: #007bff; color: white; cursor: pointer; }
-        #result { font-size: 20px; color: green; margin-top: 20px; text-align: center; }
+        /* Grundlegendes Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 600px;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        select, button {
+            padding: 15px;
+            font-size: 1rem;
+            margin: 10px 0;
+            width: 100%;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        select {
+            background-color: #f9f9f9;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            font-weight: bold;
+            border: none;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            font-size: 1.5rem;
+            color: #28a745;
+            margin-top: 20px;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        #error {
+            color: #e74c3c;
+            font-size: 1.2rem;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>LSPD Bußgeldrechner</h1>
+
         <label for="violation">Wählen Sie den Verstoß:</label>
         <select id="violation">
+            <option value="">Wählen Sie einen Verstoß</option>
             <!-- Optionen werden hier per JavaScript hinzugefügt -->
         </select>
+
         <button onclick="calculateFine()">Berechnen</button>
-        <h2 id="result"></h2>
+
+        <div id="result"></div>
+        <div id="error"></div>
+
+        <div class="footer">
+            <p>© 2025 LSPD Bußgeldrechner</p>
+        </div>
     </div>
 
     <script>
-        let violations = [];
+        // Verstöße und Bußgelder
+        let violations = [
+            { "violation": "Fahren ohne Führerschein", "fine": 1500 },
+            { "violation": "Rote Ampel überfahren", "fine": 1000 },
+            { "violation": "Fahren unter Alkoholeinfluss", "fine": 2000 },
+            { "violation": "Unfallflucht", "fine": 2500 }
+        ];
 
-        // Laden der JSON-Daten (die Bußgelder und Verstöße)
-        fetch('violations.json')
-            .then(response => response.json())
-            .then(data => {
-                violations = data;
-                let selectElement = document.getElementById('violation');
-
-                // Dynamisch Optionen für Verstöße hinzufügen
-                violations.forEach(violation => {
-                    let option = document.createElement('option');
-                    option.value = violation.violation;
-                    option.textContent = violation.violation;
-                    selectElement.appendChild(option);
-                });
+        // Verstöße in das Dropdown-Menü laden
+        window.onload = function() {
+            let selectElement = document.getElementById('violation');
+            violations.forEach(function(violation) {
+                let option = document.createElement('option');
+                option.value = violation.violation;
+                option.textContent = violation.violation;
+                selectElement.appendChild(option);
             });
+        };
 
-        // Bußgeld berechnen
+        // Berechnung des Bußgeldes
         function calculateFine() {
             let violation = document.getElementById('violation').value;
+            let resultElement = document.getElementById('result');
+            let errorElement = document.getElementById('error');
+            
+            // Fehlerbehandlung: Überprüfen, ob eine Auswahl getroffen wurde
+            if (violation === "") {
+                resultElement.innerText = "";
+                errorElement.innerText = "Bitte wählen Sie einen Verstoß aus.";
+                return;
+            }
+
+            errorElement.innerText = "";
+
+            // Den ausgewählten Verstoß und das Bußgeld finden
             let fine = violations.find(v => v.violation === violation);
             if (fine) {
-                document.getElementById('result').innerText = `Strafe: ${fine.fine} $`;
+                resultElement.innerText = `Strafe: ${fine.fine} €`;
             } else {
-                document.getElementById('result').innerText = 'Bitte wählen Sie einen Verstoß aus.';
+                resultElement.innerText = "Fehler: Verstoß nicht gefunden.";
             }
         }
     </script>
