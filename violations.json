@@ -1,0 +1,18 @@
+[
+    {
+        "violation": "Fahren ohne Führerschein",
+        "fine": 1500
+    },
+    {
+        "violation": "Rote Ampel überfahren",
+        "fine": 1000
+    },
+    {
+        "violation": "Fahren unter Alkoholeinfluss",
+        "fine": 2000
+    },
+    {
+        "violation": "Unfallflucht",
+        "fine": 2500
+    }
+]
