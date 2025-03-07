@@ -5,36 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LSPD Bußgeldrechner</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 30px; }
-        select, button { padding: 10px; font-size: 16px; }
+        body { font-family: Arial, sans-serif; margin: 30px; background-color: #f4f4f9; }
+        h1 { text-align: center; color: #333; }
+        .container { max-width: 600px; margin: auto; padding: 20px; background-color: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); }
+        label { font-size: 18px; }
+        select, button { padding: 10px; font-size: 16px; width: 100%; margin-top: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        button:hover { background-color: #007bff; color: white; cursor: pointer; }
+        #result { font-size: 20px; color: green; margin-top: 20px; text-align: center; }
     </style>
 </head>
 <body>
-    <h1>LSPD Bußgeldrechner</h1>
-    <label for="violation">Wählen Sie den Verstoß:</label>
-    <select id="violation">
-        <option value="Verstoß 1">Verstoß 1</option>
-        <option value="Verstoß 2">Verstoß 2</option>
-        <option value="Verstoß 3">Verstoß 3</option>
-    </select>
-    <button onclick="calculateFine()">Berechnen</button>
-
-    <h2 id="result"></h2>
+    <div class="container">
+        <h1>LSPD Bußgeldrechner</h1>
+        <label for="violation">Wählen Sie den Verstoß:</label>
+        <select id="violation">
+            <!-- Optionen werden hier per JavaScript hinzugefügt -->
+        </select>
+        <button onclick="calculateFine()">Berechnen</button>
+        <h2 id="result"></h2>
+    </div>
 
     <script>
+        let violations = [];
+
+        // Laden der JSON-Daten (die Bußgelder und Verstöße)
+        fetch('violations.json')
+            .then(response => response.json())
+            .then(data => {
+                violations = data;
+                let selectElement = document.getElementById('violation');
+
+                // Dynamisch Optionen für Verstöße hinzufügen
+                violations.forEach(violation => {
+                    let option = document.createElement('option');
+                    option.value = violation.violation;
+                    option.textContent = violation.violation;
+                    selectElement.appendChild(option);
+                });
+            });
+
+        // Bußgeld berechnen
         function calculateFine() {
             let violation = document.getElementById('violation').value;
-            let fine = '';
-
-            if (violation === 'Verstoß 1') {
-                fine = 'Strafe: 1000$';
-            } else if (violation === 'Verstoß 2') {
-                fine = 'Strafe: 2000$';
-            } else if (violation === 'Verstoß 3') {
-                fine = 'Strafe: 3000$';
+            let fine = violations.find(v => v.violation === violation);
+            if (fine) {
+                document.getElementById('result').innerText = `Strafe: ${fine.fine} $`;
+            } else {
+                document.getElementById('result').innerText = 'Bitte wählen Sie einen Verstoß aus.';
             }
-
-            document.getElementById('result').innerText = fine;
         }
     </script>
 </body>
