@@ -1,0 +1,33 @@
+name: Update Bußgelddaten
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Täglich um Mitternacht
+  push:
+    branches:
+      - main
+
+jobs:
+  scrape-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install requests beautifulsoup4
+
+      - name: Run scraper
+        run: |
+          python3 scraper.py  # Dein Scraper-Skript ausführen
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'Your GitHub Username'
+          git config --global user.email 'Your Email'
+          git add violations.json
+          git commit -m 'Aktualisierte Bußgelder'
+          git push
